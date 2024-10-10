@@ -128,7 +128,7 @@ const WordleGrid = () => {
           setTimeout(() => {
             setMessage("");
           }, 5000);
-        } else {
+        } else if (!words.includes(newRows[activeRow].join("").toLowerCase())) {
           setMessageColor("red");
           setMessage("Word is not in list");
 
@@ -141,17 +141,17 @@ const WordleGrid = () => {
           newRows[activeRow].join("") === localStorage.getItem("correctWord")
         ) {
           setMessageColor("green");
-          setMessage("You Won!");
+          setMessage(`You Won! The word was ${correctWord}`);
           setGameRunning(false);
-          generateNewWord();
         } else if (
           newRows[activeRow].join("") !== localStorage.getItem("correctWord") &&
-          activeRow === 5 &&
-          words.includes(newRows[activeRow].join(""))
+          activeRow === 5
         ) {
-          setMessageColor("red");
-          setMessage("You Lost!");
-          setGameRunning(false);
+          if (words.includes(newRows[activeRow].join("").toLowerCase())) {
+            setMessageColor("red");
+            setMessage(`You Lost! The word was ${correctWord}`);
+            setGameRunning(false);
+          }
         }
       }
     }
@@ -187,6 +187,7 @@ const WordleGrid = () => {
         } mb-5 bg-[#538d4e] p-3 rounded-xl font-bold`}
         onClick={() => {
           window.location.reload();
+          generateNewWord();
         }}
       >
         New Wordle
